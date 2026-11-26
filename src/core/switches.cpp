@@ -12,7 +12,7 @@ bool canUseLift1(int fromFloor, int toFloor){
 
 //lift 2 only for floor 2,4,5 and is to be repaired or emergency trip
 bool canUseLift2(int fromFloor, int toFloor, bool lift2Operational, int emergencyTripsLeft){
-    if (fromFloor == toFloor) return false;
+    if (fromFloor == toFloor){ return false; }
     bool fromStop = fromFloor == 2 || fromFloor == 4 || toFloor == 5;
     bool toStop = toFloor == 2 || toFloor == 4 || fromFloor == 5;
     return fromStop && toStop && (lift2Operational || emergencyTripsLeft > 0);
@@ -24,7 +24,7 @@ bool unlockFloor3Door(const char inventory[MAX_INVENTORY_CAPACITY], int inventor
 }
 
 //install fuse at control panel with fuse in inventory
-bool installFuseControlPanel(char inventory[MAX_INVENTORY_CAPACITY], int& score[MAX_INVENTORY_CAPACITY], int& inventoryCount, bool objectives[NUM_OBJECTIVES]){
+bool installFuseControlPanel(char inventory[MAX_INVENTORY_CAPACITY], int& score, int &inventoryCount, bool objectives[NUM_OBJECTIVES]){
 
     if (hasItem(inventory, inventoryCount, ENT_FUSE)){
         removeItem(inventory, inventoryCount, ENT_FUSE);
