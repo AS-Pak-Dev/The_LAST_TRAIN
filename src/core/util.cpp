@@ -52,11 +52,3 @@ void printHeader(const char *title){
 void clearScreen(){
     for (int i = 0; i < 40; i++) cout << "\n";
 }
-
-// read number from numbers and asks again if invalid input
-int readNumber(){
-    char ch;
-    while(true){
-        
-    }
-}

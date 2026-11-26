@@ -7,6 +7,5 @@ void trimWhitespace(char* str);
 bool stringEquals(const char* a, const char* b);
 void printHeader(const char* title);
 void clearScreen();
-int readNumber();
 
 #endif // UTIL_H
