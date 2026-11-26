@@ -1,5 +1,5 @@
 #include "util.h"
-#include<iostream>
+#include <iostream>
 using namespace std;
 
 // Primitive helper utilities, clamping, and screen control
@@ -8,21 +8,21 @@ using namespace std;
 // Energy and Time stay bw 0 and 100
 int clampInt(int val, int minVal, int maxVal){
     if (val < minVal) return minVal;
-    elif (val > maxVal) return maxVal;
+    else if (val > maxVal) return maxVal;
     return val;
 }
 
 // Remove spaces and line endings from start and end of text
 void trimWhitespace(char *str){
     int start = 0;
-    while (str[start]) == ' ' || str[start] == '\t' || str[start] == '\r' || str[start] == '\n'{
+    while (str[start] == ' ' || str[start] == '\t' || str[start] == '\r' || str[start] == '\n'){
         start += 1;
     }
 
     int end = start;
     while (str[end] != '\0') end +=1;
-    while ((end > start) && (str[end - 1] == ' ') || (str[end - 1] == '\t') || (str[end-1] == '\r') || (str[end - 1] == '\n' )){
-        end += 1;
+    while (((end > start) && (str[end - 1] == ' ')) || (str[end - 1] == '\t') || (str[end-1] == '\r') || (str[end - 1] == '\n' )){
+        end -= 1;
     }
     int length = end - start;
     for (int i = 0; i < length; i++){
