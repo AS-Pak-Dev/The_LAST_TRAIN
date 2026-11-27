@@ -81,5 +81,28 @@ bool loadBuildingMap(const char* filename, char horizontalConn[NUM_FLOORS][ROOMS
 
 }
 
+//reads file and updates energy, time and score and reset floor and room to 0 at start of new game
+bool loadInitialState(const char* filename, int& playerFloor, int& playerRoom, int& energy, int& time, int& score, char inventory[MAX_INVENTORY_CAPACITY], int& inventoryCount, bool objectives[NUM_OBJECTIVES], int& emergencyTripsLeft){
+    ifstream file(filename);
+    if (!file) return false;
+
+    char word[MAX_NAME_LEN];
+    while(file >> word){
+        if (stringEquals(word, "INITIAL_ENERGY:")) file >> energy;
+        else if (stringEquals(word, "INITIAL_TIME:")) file >> time;
+        else if (stringEquals(word, "INITIAL_SCORE:")) file >> score;
+        
+    }
+    
+    file.close();
+    playerFloor = 0;
+    playerRoom = 0;
+    inventoryCount = 0;
+    emergencyTripsLeft = 0;
+    
+    for (int i = 0; i < MAX_INVENTORY_CAPACITY; i++) inventory[i] = ENT_NONE;
+
+    for (int i = 0; i < NUM_OBJECTIVES; i++) objectives[i] = false;
+}
 
 
