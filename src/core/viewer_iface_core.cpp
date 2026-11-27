@@ -8,19 +8,19 @@ using namespace std;
 
 //20 room names 
 const char *roomNames[NUM_FLOORS][ROOMS_PER_FLOOR] = {
-    {"Entrance Lobby", "Reception", "Waiting Area", "Utility Room"}
-    {"Lounge", "Archive", "Lab", "Meeting Room"}
-    {"Stairwell Annex", "Security Vestibule", "Animal Room", "Control Room"}
-    {"First Aid Station", "Medical Room", "Maintenance Corridor", "Office"}
-    {"Security Room", "Train Boarding Platform", "Storage Room", "Observation Deck"}
+    {"Entrance Lobby", "Reception", "Waiting Area", "Utility Room"},
+    {"Lounge", "Archive", "Lab", "Meeting Room"},
+    {"Stairwell Annex", "Security Vestibule", "Animal Room", "Control Room"},
+    {"First Aid Station", "Medical Room", "Maintenance Corridor", "Office"},
+    {"Security Room", "Train Boarding Platform", "Storage Room", "Observation Deck"},
 };
 
 //link bw rooms
 const char buildingLinks[NUM_FLOORS][ROOMS_PER_FLOOR - 1] = {
-    {'W', '1', 'D'}
-    {'D', '1', 'D'}
-    {'L', 'W', 'D'}
-    {'W', '#', 'D'}
+    {'W', '1', 'D'},
+    {'D', '1', 'D'},
+    {'L', 'W', 'D'},
+    {'W', '#', 'D'},
     {'D', 'D', 'W'}
 };
 
@@ -56,5 +56,34 @@ void renderObjectives(int floor, int room, const char roomEntities[NUM_FLOORS][R
     for (int i = 0; i < entityCount; i++) {
         char symbol = roomEntities[floor - 1][room - 1];
         cout << " " << symbol << " = " << getEntityName(symbol) << "\n";
+    }
+}
+
+// drawing the building with the top floor first to the bottom
+void renderAsciiBuilding(int playerFloor, int playerRoom){
+    cout << "\n";
+    for(int f=NUM_FLOORS; f>=1; f++){
+        cout << "F" << f << "  ";
+        for(int r=1; r<=ROOMS_PER_FLOOR; r++){
+            if(f == playerFloor && r == playerRoom) cout << "[ P ]";
+            else cout << "[F" << f << "-R" << r << "]";
+            if(r < ROOMS_PER_FLOOR) {
+                char link = buildingLinks[f-1][r-1];
+                if(link == '1') cout << "L1";
+                else cout << " " << link << " ";
+            }
+        }
+        cout << endl;
+    }
+    cout << "P = YOU  D = door  W=window  L=locked door  #=wall  L1=lift  1" << endl;
+    cout << "Stairs (room 1): F1-F2, F2-F3, F4-F5.  Lift 1 (rooms 2-3).  Lift 2 (room 4). "<< endl;
+}
+
+// printing the checklist
+void renderObjectivesChecklist(const bool objectives[NUM_OBJECTIVES]){
+    cout << endl << "OBJECTIVES: " << endl;
+    for(int i=0; i<NUM_OBJECTIVES-2; i++){
+        cout << (objectives[i] ? "[X] " : "[ ] ");
+        cout << objectiveNames[i] << endl;
     }
 }
