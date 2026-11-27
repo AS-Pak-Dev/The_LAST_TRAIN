@@ -105,4 +105,38 @@ bool loadInitialState(const char* filename, int& playerFloor, int& playerRoom, i
     for (int i = 0; i < NUM_OBJECTIVES; i++) objectives[i] = false;
 }
 
+// validation of starting room having atleast one exit
+bool validateStartingRoom(int startFloor, int startRoom, const char horizontalConn[NUM_FLOORS][ROOMS_PER_FLOOR-1]){
+    if(startFloor < 1 || startFloor > NUM_FLOORS || startRoom < 1 || startRoom > ROOMS_PER_FLOOR) return false;
+    for(int f=1; f<=NUM_FLOORS; f++){
+        for(int r=1; r<=ROOMS_PER_FLOOR; r++){
+            char link;
+            if(isDirectlyConnected(startFloor, startFloor, f, r, horizontalConn, link) && link != CONN_SOLID_WALL) return true;
+        }
+    }
+    return false;
+}
+
+// getting the readable name of an item's symbol
+const char* getEntityName(char entitySymbol) {
+     switch(entitySymbol){
+        case ENT_MASTER_KEY : return "Master Key";
+        case ENT_ENERGY_PACK : return "Energy Pack";
+        case ENT_EMERGENCY_TOOLKIT : return "Emergency Toolkit";
+        case ENT_CLUE_4 : return "Clue 4";
+        case ENT_FUSE : return "Fuse";
+        case ENT_CAT : return "Cat";
+        case ENT_CONTROL_PANEL : return "Control Panel";
+        case ENT_LIFT_PASS : return "Lift Pass";
+        case ENT_PASSENGER : return "Injured Passenger";
+        case ENT_MEDICAL_KIT : return "Medical Kit";
+        case ENT_EMERGENCY_CARD : return "Emergency Access Card";
+        case ENT_CLUE_2 : return "Clue Digit 2";
+        case ENT_CLUE_7 : return "Clue Digit 7";
+        case ENT_CABINET_TRAIN_KEY : return "Cabinet/Train Key";
+        case ENT_CAT_CARRIER : return "Cat Carrier";
+        case ENT_OBSERVATION_TOKEN : return "Observation Token";
+        default : return "Unknown";
+     }
+}
 
