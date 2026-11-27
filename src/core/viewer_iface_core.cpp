@@ -28,4 +28,33 @@ const char buildingLinks[NUM_FLOORS][ROOMS_PER_FLOOR - 1] = {
 const char* objectiveNames[NUM_OBJECTIVES - 2] = {"Master Key Collected", "Clue digit 4 found", "Clue Digit 2 found", "Clue digit 7 found", "Cabinet Unlocked", "Train Key collected", "Fuse Collected", "Fuse installed", "Lift Pass collected", "Lift 2 active", "Passenger Rescued", "Cat carrier collected", "Cat secured", "Train prepared"};
 
 
+//Print energy, time, score, inventory and room and emergency trip only shown when trips are left else not shown
+void renderDashboard(int playerFloor, int playerRoom, int energy, int time, int score, const char inventory[MAX_INVENTORY_CAPACITY], int inventoryCount, int emergencyTripsLeft) {
+    cout << "----------------------------------------\n";
+    cout << "Room: F" << playerFloor << "-R" << playerRoom;
+    cout << " (" << roomNames[playerFloor - 1][playerRoom - 1] << ")\n";
+    cout << "Energy: " << energy << "  Time: " << time << "  Score: " << score << "\n";
+    cout << "Inventory: ";
 
+    if (inventoryCount == 0) cout << "Empty";
+    for (int i = 0; i < inventoryCount; ++i) {
+            cout << inventory[i] << " ";
+        }
+    cout << "\n";
+    if (emergencyTripsLeft > 0) {
+        cout << "Emergency Trips Left: " << emergencyTripsLeft << "\n";
+    }
+}
+
+void renderObjectives(int floor, int room, const char roomEntities[NUM_FLOORS][ROOMS_PER_FLOOR], int entityCount){
+
+    cout << "You search F" << floor << "-R" << room;
+    cout << " (" << roomNames[floor - 1][room - 1] << "):\n";
+
+    if (entityCount == 0) cout << "Nothing here.\n";
+    
+    for (int i = 0; i < entityCount; i++) {
+        char symbol = roomEntities[floor - 1][room - 1];
+        cout << " " << symbol << " = " << getEntityName(symbol) << "\n";
+    }
+}
