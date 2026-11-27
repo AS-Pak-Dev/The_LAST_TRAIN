@@ -46,7 +46,7 @@ void renderDashboard(int playerFloor, int playerRoom, int energy, int time, int 
     }
 }
 
-void renderObjectives(int floor, int room, const char roomEntities[NUM_FLOORS][ROOMS_PER_FLOOR], int entityCount){
+void renderRoomDetails(int floor, int room, const char roomEntities[NUM_FLOORS][ROOMS_PER_FLOOR], int entityCount){
 
     cout << "You search F" << floor << "-R" << room;
     cout << " (" << roomNames[floor - 1][room - 1] << "):\n";
