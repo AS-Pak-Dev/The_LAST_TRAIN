@@ -24,7 +24,7 @@ bool unlockFloor3Door(const char inventory[MAX_INVENTORY_CAPACITY], int inventor
 }
 
 //install fuse at control panel with fuse in inventory
-bool installFuseControlPanel(char inventory[MAX_INVENTORY_CAPACITY], int& score, int &inventoryCount, bool objectives[NUM_OBJECTIVES]){
+bool installFuseControlPanel(char inventory[MAX_INVENTORY_CAPACITY], int &inventoryCount, bool objectives[NUM_OBJECTIVES], int &score){
 
     if (hasItem(inventory, inventoryCount, ENT_FUSE)){
         removeItem(inventory, inventoryCount, ENT_FUSE);

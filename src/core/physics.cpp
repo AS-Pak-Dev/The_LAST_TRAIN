@@ -39,8 +39,6 @@ bool canTraverse(int targetFloor, int targetRoom, char connType,const char inven
     
     else if (connType == CONN_LOCKED_DOOR) return unlockFloor3Door(inventory, inventoryCount);
     
-    else if (connType == CONN_LOCKED_DOOR) return unlockFloor3Door(inventory, inventoryCount);
-    
     else if (connType == '2') return lift2Operational || emergencyTripsLeft > 0;
     return true;
 }
