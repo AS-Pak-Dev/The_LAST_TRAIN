@@ -60,3 +60,26 @@ bool handleMoveCommand(int targetFloor, int targetRoom, int& currentFloor, int& 
     currentRoom = targetRoom;
     cout << "You moved to F" << targetFloor << "-R" << targetRoom << endl;
     return true;
+
+}
+
+//it costs 1 energy and 1 time, looking for clue digits, found digit gives 10 points
+    bool handleInspectCommand(int currentFloor, int currentRoom, int& energy, int& time, const char roomEntities[NUM_FLOORS][ROOMS_PER_FLOOR][MAX_ENTITIES_PER_ROOM], int entityCount, bool objectives[NUM_OBJECTIVES], int& score){
+        applyResourceDelta(energy, time, COST_INSPECT_ENERGY, COST_INSPECT_TIME);
+        renderRoomDetails(currentFloor, currentRoom, roomEntities, entityCount);
+
+        for(int i=0; i<entityCount; i++){
+            char symbol = roomEntities[currentFloor-1][currentRoom-1][i];
+            int clue = -1;
+            if(symbol == ENT_CLUE_4) clue = OBJ_CLUE_4;
+            if(symbol == ENT_CLUE_2) clue = OBJ_CLUE_2;
+            if(symbol == ENT_CLUE_7) clue = OBJ_CLUE_7;
+            
+            if(clue != -1 && !objectives[clue]){
+                objectives[clue] = true;
+                applyScoreDelta(score, SCORE_CLUE_FOUND);
+                cout << "Your found a clue digit: " << symbol << " (+" << SCORE_CLUE_FOUND << " points)" << endl;
+            }
+        }
+        return true;
+    }
