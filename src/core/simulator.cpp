@@ -21,7 +21,7 @@ bool handleMoveCommand(int targetFloor, int targetRoom, int& currentFloor, int& 
         cout << "The room doesn't exist" << endl;
         return false;
     }
-    if(targetFloor == currentFloor && targetFloor == targetRoom){
+    if(targetFloor == currentFloor && targetRoom == currentRoom){
         cout << "You are already there." << endl;
         return false;
     }
@@ -182,20 +182,21 @@ bool handleCollectCommand(char itemSymbol, int currentFloor, int currentRoom, in
 
 bool handleUseCommand(char itemSymbol, int currentFloor, int currentRoom, int& energy, int& time, int& score, char inventory[MAX_INVENTORY_CAPACITY], int& inventoryCount, bool objectives[NUM_OBJECTIVES]){
 
-    if (hasItem(inventory, inventoryCount,  itemSymbol)){
-        cout << "You do not hav that item in your inventory." << endl;
+    if (!hasItem(inventory, inventoryCount,  itemSymbol)){
+        cout << "You do not have that item in your inventory." << endl;
         return false;
     }
 
     if (itemSymbol == ENT_MEDICAL_KIT && currentFloor == 4 && currentRoom == 1 && !objectives[OBJ_PASSENGER_RESCUED]){
         applyResourceDelta(energy, time, COST_ITEM_USE_ENERGY, COST_ITEM_USE_TIME);
+        removeItem(inventory, inventoryCount, ENT_MEDICAL_KIT);
         objectives[OBJ_PASSENGER_RESCUED] = true;
         applyScoreDelta(score, SCORE_RESCUE_PASSENGER);
         cout << "You treated the passenger. Passenger rescued...!\n";
         return true;
     }
 
-    if (itemSymbol == ENT_FUSE && currentFloor == 3 && currentRoom == 4){
+    if (itemSymbol == ENT_CAT_CARRIER && currentFloor == 3 && currentRoom == 3 && !objectives[OBJ_CAT_SECURED]){
         applyResourceDelta(energy, time, COST_ITEM_USE_ENERGY, COST_ITEM_USE_TIME);
         removeItem(inventory, inventoryCount, ENT_CAT_CARRIER);
         objectives[OBJ_CAT_SECURED] = true;
