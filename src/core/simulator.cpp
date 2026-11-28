@@ -3,6 +3,7 @@
 #include "switches.h"
 #include "logger.h"
 #include "viewer_iface.h"
+#include "level.h"
 #include "util.h"
 #include <iostream>
 using namespace std;
@@ -83,3 +84,110 @@ bool handleMoveCommand(int targetFloor, int targetRoom, int& currentFloor, int& 
         }
         return true;
     }
+
+
+//item present in room, cat/person can notbe picked up and cabinet should be unlocked. Also energy pack, toolkit and token effect immediately and not stored, everything else goes into inventory if space avaliable.
+bool handleCollectCommand(char itemSymbol, int currentFloor, int currentRoom, int &energy, int &time, int& score, char roomEntities[NUM_FLOORS][ROOMS_PER_FLOOR][MAX_ENTITIES_PER_ROOM], int& entityCount, char inventory[MAX_INVENTORY_CAPACITY], int& inventoryCount, bool objectives[NUM_OBJECTIVES]){
+
+    bool inRoom = false;
+    for (int i = 0; i < entityCount; i++) {
+        if (roomEntities[currentFloor - 1][currentRoom - 1][i] == itemSymbol) {
+            inRoom = true;
+        }
+    }
+
+    if (!inRoom) {
+        cout << "The item is not present in the room." << endl;
+        return false;
+    }
+
+    if (itemSymbol == ENT_CLUE_4 || itemSymbol == ENT_CLUE_2 || itemSymbol == ENT_CLUE_7) {
+        cout << "Clues are written on the wall." << endl;
+        return false;
+    }
+
+    if (itemSymbol == ENT_PASSENGER || itemSymbol == ENT_CAT || itemSymbol == ENT_CONTROL_PANEL){
+        cout << "You cannot pick up this item." << endl;
+        return false;
+    }
+
+    if (itemSymbol == ENT_CABINET_TRAIN_KEY && !objectives[OBJ_CABINET_UNLOCKED]) {
+        cout << "The cabinet is locked. You need to unlock it with code first." << endl;
+        return false;
+    }
+
+    bool usedAtOnce = itemSymbol == ENT_ENERGY_PACK || itemSymbol == ENT_EMERGENCY_TOOLKIT || itemSymbol == ENT_OBSERVATION_TOKEN;
+
+    if(!usedAtOnce && inventoryCount >= MAX_INVENTORY_CAPACITY) {
+        cout << "Your inventory is full. Cannot collect more items." << endl;
+        return false;
+    }
+
+    applyResourceDelta(energy, time, COST_ITEM_PICKUP_ENERGY, COST_ITEM_PICKUP_TIME);
+
+    for (int i = 0; i < entityCount; i++) {
+        if (roomEntities[currentFloor - 1][currentRoom - 1][i] == itemSymbol) {
+            for (int j = i; j < entityCount - 1; j++) {
+                roomEntities[currentFloor - 1][currentRoom - 1][j] = roomEntities[currentFloor - 1][currentRoom - 1][j + 1];
+            }
+            entityCount--;
+            break;
+        }
+    }
+
+    if (usedAtOnce) {
+
+        if (itemSymbol == ENT_ENERGY_PACK) applyResourceDelta(energy, time, BONUS_ENERGY_PACK, 0);
+
+        if (itemSymbol == ENT_EMERGENCY_TOOLKIT) applyResourceDelta(energy, time, BONUS_EMERGENCY_TOOLKIT, 0);
+
+        if (itemSymbol == ENT_OBSERVATION_TOKEN) applyResourceDelta(energy, time, 0, BONUS_OBSERVATION_TOKEN);
+
+        cout << "You used the " << getEntityName(itemSymbol) << ".\n" ;
+        return true;
+
+        }
+
+        addItem(inventory, inventoryCount, itemSymbol);
+
+        if (itemSymbol == ENT_MASTER_KEY) {
+            objectives[OBJ_MASTER_KEY] = true;
+            applyScoreDelta(score, SCORE_KEY_COLLECT);
+        }
+
+        else if (itemSymbol == ENT_FUSE){
+            objectives[OBJ_FUSE_COLLECTED] = true;
+        }
+
+        else if (itemSymbol == ENT_CAT_CARRIER){
+            objectives[OBJ_CAT_CARRIER] = true;
+        }
+
+        else if (itemSymbol == ENT_CABINET_TRAIN_KEY){
+            objectives[OBJ_TRAIN_KEY] = true;
+            applyScoreDelta(score, SCORE_TRAIN_KEY);
+        }
+
+        if (objectives[OBJ_FUSE_INSTALLED] && objectives[OBJ_LIFT_PASS]){
+            objectives[OBJ_LIFT2_ACTIVE] = true;
+        }
+        
+        if (itemSymbol == ENT_CABINET_TRAIN_KEY) cout << "You took the Train keyyy!\n";
+
+        else cout << "You picked up the " << getEntityName(itemSymbol) << ".\n";
+
+        return true;
+}
+
+
+bool handleUseCommand(char itemSymbol, int currentFloor, int currentRoom, int& energy, int& time, int &score, char inventory[MAX_INVENTORY_CAPACITY], int& inventoryCount, bool objectives[NUM_OBJECTIVES]){
+
+    if (hasItem(inventory, inventoryCount,  itemSymbol)){
+        cout << "You do not hav that item in your inventory." << endl;
+        return false;
+    }
+
+    if (itemSymbol == ENT_MEDICAL_KIT && currentFloor == 4)
+
+
+}
