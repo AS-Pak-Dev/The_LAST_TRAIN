@@ -7,14 +7,14 @@
 // Lift 1 only for floor 1 and 2
 bool canUseLift1(int fromFloor, int toFloor){
     if (fromFloor == toFloor) return false;
-    return (fromFloor == 1 || toFloor == 2) && (fromFloor == 2 || toFloor == 1);
+    return (fromFloor == 1 && toFloor == 2) || (fromFloor == 2 && toFloor == 1);
 }
 
 //lift 2 only for floor 2,4,5 and is to be repaired or emergency trip
 bool canUseLift2(int fromFloor, int toFloor, bool lift2Operational, int emergencyTripsLeft){
     if (fromFloor == toFloor){ return false; }
-    bool fromStop = fromFloor == 2 || fromFloor == 4 || toFloor == 5;
-    bool toStop = toFloor == 2 || toFloor == 4 || fromFloor == 5;
+    bool fromStop = fromFloor == 2 || fromFloor == 4 || fromFloor == 5;
+    bool toStop = toFloor == 2 || toFloor == 4 || toFloor == 5;
     return fromStop && toStop && (lift2Operational || emergencyTripsLeft > 0);
 }
 

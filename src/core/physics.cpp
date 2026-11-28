@@ -43,10 +43,11 @@ bool canTraverse(int targetFloor, int targetRoom, char connType,const char inven
     return true;
 }
 
+const int timeCap = 100;
 //adds changes to energy and time, keeping them bw 0 and 100
 void applyResourceDelta(int& energy, int& time, int deltaEnergy, int deltaTime){
     energy = clampInt(energy + deltaEnergy, 0, MAX_ENERGY);
-    time = clampInt(time + deltaTime, 0, MAX_TIME);
+    time = clampInt(time + deltaTime, 0, timeCap);
 }
 
 //adds changes to score, keeping it bw 0 and 100

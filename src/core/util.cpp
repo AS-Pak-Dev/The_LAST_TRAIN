@@ -21,7 +21,7 @@ void trimWhitespace(char *str){
 
     int end = start;
     while (str[end] != '\0') end +=1;
-    while (((end > start) && (str[end - 1] == ' ')) || (str[end - 1] == '\t') || (str[end-1] == '\r') || (str[end - 1] == '\n' )){
+    while (end > start && (str[end - 1] == ' ' || str[end - 1] == '\t' || str[end-1] == '\r' || str[end - 1] == '\n' )){
         end -= 1;
     }
     int length = end - start;

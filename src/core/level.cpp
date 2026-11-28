@@ -12,7 +12,7 @@ bool loadBuildingMap(const char* filename, char horizontalConn[NUM_FLOORS][ROOMS
     if (!file) return false;
 
     for (int f = 0; f < NUM_FLOORS; f++){
-        for (int r = 0; r < ROOMS_PER_FLOOR - 1; r++){
+        for (int r = 0; r < ROOMS_PER_FLOOR; r++){
             entityCounts[f][r] = 0;
         }
         for (int c = 0; c < ROOMS_PER_FLOOR - 1; c++){
@@ -30,7 +30,7 @@ bool loadBuildingMap(const char* filename, char horizontalConn[NUM_FLOORS][ROOMS
         int tagPos[ROOMS_PER_FLOOR];
         int tags = 0;
         for (int i = 0; i+4 < length && tags < ROOMS_PER_FLOOR; i++){
-            if (topLine[i] == 'F' && topLine[i+4] >= '1' && topLine[i+4] <= '9' && topLine[i+2] == '-' && topLine[i+3] == 'R' && topLine[i+4] >= '1' && topLine[i+4] <= '9'){
+            if (topLine[i] == 'F' && topLine[i+1] >= '1' && topLine[i+1] <= '9' && topLine[i+2] == '-' && topLine[i+3] == 'R' && topLine[i+4] >= '1' && topLine[i+4] <= '9'){
                 tagPos[tags] = i;
                 tags += 1;
             }   
@@ -113,7 +113,7 @@ bool validateStartingRoom(int startFloor, int startRoom, const char horizontalCo
     for(int f=1; f<=NUM_FLOORS; f++){
         for(int r=1; r<=ROOMS_PER_FLOOR; r++){
             char link;
-            if(isDirectlyConnected(startFloor, startFloor, f, r, horizontalConn, link) && link != CONN_SOLID_WALL) return true;
+            if(isDirectlyConnected(startFloor, startRoom, f, r, horizontalConn, link) && link != CONN_SOLID_WALL) return true;
         }
     }
     return false;

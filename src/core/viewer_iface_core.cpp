@@ -65,11 +65,11 @@ void renderAsciiBuilding(int playerFloor, int playerRoom){
     for(int f=NUM_FLOORS; f>=1; f--){
         cout << "F" << f << "  ";
         for(int r=1; r<=ROOMS_PER_FLOOR; r++){
-            if(f == playerFloor && r == playerRoom) cout << "[ P ]";
+            if(f == playerFloor && r == playerRoom) cout << "[  P  ]";
             else cout << "[F" << f << "-R" << r << "]";
             if(r < ROOMS_PER_FLOOR) {
                 char link = buildingLinks[f-1][r-1];
-                if(link == '1') cout << "L1";
+                if(link == '1') cout << " L1";
                 else cout << " " << link << " ";
             }
         }
