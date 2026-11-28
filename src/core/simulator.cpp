@@ -242,7 +242,7 @@ bool handleUseCommand(char itemSymbol, int currentFloor, int currentRoom, int& e
 }
 
 //check if cabinet in the room and look for ^ item, that has not been opened and all 3 clues are found and the code is correct
-bool handleUnlockCabinetCommand(const char* code, int currentFloor, int currentRoom, bool objectives[NUM_OBJECTIVES], int & score, char roomEntities[NUM_FLOOR][ROOMS_PER_FLOOR][MAX_ENTITIES_PER_ROOM], int &entityCount){
+bool handleUnlockCabinetCommand(const char* code, int currentFloor, int currentRoom, bool objectives[NUM_OBJECTIVES], int& score, char roomEntities[NUM_FLOORS][ROOMS_PER_FLOOR][MAX_ENTITIES_PER_ROOM], int&entityCount){
 
     bool cabinetHere = false;
     for (int i =0; i < entityCount; i++){
@@ -250,7 +250,7 @@ bool handleUnlockCabinetCommand(const char* code, int currentFloor, int currentR
             cabinetHere = true;
         }
     }
-    if (obejctives[OBJ_CABINET_UNLOCKED]){
+    if (objectives[OBJ_CABINET_UNLOCKED]){
         cout << "The cabinet is already openn.\n";
         return false;
    }
@@ -260,7 +260,7 @@ bool handleUnlockCabinetCommand(const char* code, int currentFloor, int currentR
         return false;
    }
 
-   if (!objectives[OBJ_CLUE_4] || !objectives[OBJ_CLUE_2] || !objectives[OBJ_CLUE_&]){
+   if (!objectives[OBJ_CLUE_4] || !objectives[OBJ_CLUE_2] || !objectives[OBJ_CLUE_7]){
         cout << "You have not found all 3 clue digits yet.\n";
         return false;
    }
@@ -278,7 +278,7 @@ bool handleUnlockCabinetCommand(const char* code, int currentFloor, int currentR
 
 
 //prints victory or failure message and returns true if game over
-bool checkEndConditions(int energy, const bool objectives[NUM_OBJECTIVES]){
+bool checkEndConditions(int energy,int time, const bool objectives[NUM_OBJECTIVES]){
     if (objectives[OBJ_MISSION_WON]){
         printHeader("Victory!!! The last train leaves safely...");
         return true;
@@ -326,7 +326,6 @@ void runSimulation(int& playerFloor, int& playerRoom, int& energy, int& time, in
 
     while(true) {
         renderAsciiBuilding(playerFloor, playerRoom);
-        renderDashboard(playerFloor, playerRoom);
         renderDashboard(playerFloor, playerRoom, energy, time, score, inventory, inventoryCount, emergencyTripsLeft);
         cout << "\n1.Move  2.Inspect  3.Collect  4.Use Item  5.Unlock cabinet\n6.Objectives  7.Save  0.Save & Quit" << endl;
         cout << "Choice: ";

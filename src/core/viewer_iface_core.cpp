@@ -46,7 +46,7 @@ void renderDashboard(int playerFloor, int playerRoom, int energy, int time, int 
     }
 }
 
-void renderRoomDetails(int floor, int room, const char roomEntities[NUM_FLOORS][ROOMS_PER_FLOOR], int entityCount){
+void renderRoomDetails(int floor, int room, const char roomEntities[NUM_FLOORS][ROOMS_PER_FLOOR][MAX_ENTITIES_PER_ROOM], int entityCount){
 
     cout << "You search F" << floor << "-R" << room;
     cout << " (" << roomNames[floor - 1][room - 1] << "):\n";
@@ -54,7 +54,7 @@ void renderRoomDetails(int floor, int room, const char roomEntities[NUM_FLOORS][
     if (entityCount == 0) cout << "Nothing here.\n";
     
     for (int i = 0; i < entityCount; i++) {
-        char symbol = roomEntities[floor - 1][room - 1];
+        char symbol = roomEntities[floor - 1][room - 1][i];
         cout << " " << symbol << " = " << getEntityName(symbol) << "\n";
     }
 }
@@ -62,7 +62,7 @@ void renderRoomDetails(int floor, int room, const char roomEntities[NUM_FLOORS][
 // drawing the building with the top floor first to the bottom
 void renderAsciiBuilding(int playerFloor, int playerRoom){
     cout << "\n";
-    for(int f=NUM_FLOORS; f>=1; f++){
+    for(int f=NUM_FLOORS; f>=1; f--){
         cout << "F" << f << "  ";
         for(int r=1; r<=ROOMS_PER_FLOOR; r++){
             if(f == playerFloor && r == playerRoom) cout << "[ P ]";

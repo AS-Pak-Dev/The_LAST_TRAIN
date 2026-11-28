@@ -103,6 +103,8 @@ bool loadInitialState(const char* filename, int& playerFloor, int& playerRoom, i
     for (int i = 0; i < MAX_INVENTORY_CAPACITY; i++) inventory[i] = ENT_NONE;
 
     for (int i = 0; i < NUM_OBJECTIVES; i++) objectives[i] = false;
+
+    return true;
 }
 
 // validation of starting room having atleast one exit
