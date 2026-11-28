@@ -296,3 +296,102 @@ bool checkEndConditions(int energy, const bool objectives[NUM_OBJECTIVES]){
 
     return false;
 }
+
+void runSimulation(int& playerFloor, int& playerRoom, int& energy, int& time, int& score, char inventory[MAX_INVENTORY_CAPACITY], int& inventoryCount, bool objectives[NUM_OBJECTIVES], int& emergencyTripsLeft, char horizontalConn[NUM_FLOORS][ROOMS_PER_FLOOR-1], char roomEntities[NUM_FLOORS][ROOMS_PER_FLOOR][MAX_ENTITIES_PER_ROOM], int entityCounts[NUM_FLOORS][ROOMS_PER_FLOOR]){
+    char startChoice = '1';
+    cout << "1. New game  2. Load saved game\n";
+    cout << "Choice: ";
+    cin >> startChoice;
+    if(cin.fail()) return;
+
+    bool loaded = false;
+    if(startChoice == '2'){
+        loaded = loadGameStateFromFile(saveFile, playerFloor, playerRoom, energy, time, score, inventory, inventoryCount, objectives, emergencyTripsLeft, roomEntities, entityCounts);
+        if (!loaded) cout << "No saved game found. Starting a new game." << endl;
+    }
+
+    while(!loaded){
+        char floorChar = '0';
+        char roomChar = '0';
+        cout << "Start floor (1-5): ";
+        cin >> floorChar;
+        cout << "Start room (1-4): ";
+        cin >> roomChar;
+        if(cin.fail()) return;
+        playerFloor = floorChar - '0';
+        playerRoom = roomChar -'0';
+        if(validateStartingRoom(playerFloor, playerRoom, horizontalConn)) break;
+        cout << "You cannot start there. Pick another room." << endl;
+    }
+
+    while(true) {
+        renderAsciiBuilding(playerFloor, playerRoom);
+        renderDashboard(playerFloor, playerRoom);
+        renderDashboard(playerFloor, playerRoom, energy, time, score, inventory, inventoryCount, emergencyTripsLeft);
+        cout << "\n1.Move  2.Inspect  3.Collect  4.Use Item  5.Unlock cabinet\n6.Objectives  7.Save  0.Save & Quit" << endl;
+        cout << "Choice: ";
+        char choice = '0';
+        cin >> choice;
+        if(cin.fail()) choice = '0';
+
+        int f = playerFloor - 1;
+        int r = playerRoom - 1;
+
+        switch (choice) {
+            case '0':
+            saveGameStateToFile(saveFile, playerFloor, playerRoom, energy, time, score, inventory, inventoryCount, objectives, emergencyTripsLeft, roomEntities, entityCounts);
+            cout << "Game saved. GoodBye!\n";
+            return;
+            
+            case '1': {
+                char floorChar = '0';
+                char roomChar = '0';
+                cout << "Target floor: ";
+                cin >> floorChar;
+                cout << "Target Room: ";
+                cin >> roomChar;
+                if(cin.fail()) break;
+                handleMoveCommand(floorChar - '0', roomChar - '0', playerFloor, playerRoom, energy, time, horizontalConn, inventory, inventoryCount, emergencyTripsLeft, objectives[OBJ_LIFT2_ACTIVE]);
+                break;
+            }
+            case '2':
+                handleInspectCommand(playerFloor, playerRoom, energy, time, roomEntities, entityCounts[f][r], objectives, score);
+                break;
+            case '3': {
+                char symbol = ' ';
+                cout << "Item symbol to collect: ";
+                cin >> symbol;
+                if(cin.fail()) break;
+                bool picked = handleCollectCommand(symbol, playerFloor, playerRoom, energy, time, score, roomEntities, entityCounts[f][r], inventory, inventoryCount, objectives);
+                if(picked && symbol == ENT_EMERGENCY_CARD) emergencyTripsLeft = cardTrips;
+                break;
+            }
+
+            case '4': {
+                char symbol = ' ';
+                cout << "Item symbol to use: ";
+                cin >> symbol;
+                if (cin.fail()) break;
+                handleUseCommand(symbol, playerFloor, playerRoom, energy, time, score, inventory, inventoryCount, objectives);
+                if(objectives[OBJ_PASSENGER_RESCUED]) {
+                    // the rescued passenger leaves F4-R1
+                    for(int i=0; i<entityCounts[3][0]; i++){
+                        if(roomEntities[3][0][i] == ENT_PASSENGER) {
+                            for(int j=i; j<entityCounts[3][0]-1; j++){
+                                roomEntities[3][0][j] = roomEntities[3][0][j+1];
+                            }
+                            entityCounts[3][0]--;
+                            break;
+                        }
+                    }
+                }
+                break;
+            }
+
+            case '5': {
+                
+            } 
+            
+        }
+    }
+}
