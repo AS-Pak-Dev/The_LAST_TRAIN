@@ -276,6 +276,8 @@ bool handleUnlockCabinetCommand(const char* code, int currentFloor, int currentR
    return true;
 }
 
+
+//prints victory or failure message and returns true if game over
 bool checkEndConditions(int energy, const bool objectives[NUM_OBJECTIVES]){
     if (objectives[OBJ_MISSION_WON]){
         printHeader("Victory!!! The last train leaves safely...");
