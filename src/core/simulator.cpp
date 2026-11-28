@@ -163,6 +163,11 @@ bool handleCollectCommand(char itemSymbol, int currentFloor, int currentRoom, in
             objectives[OBJ_CAT_CARRIER] = true;
         }
 
+        else if (itemSymbol == ENT_LIFT_PASS){
+            objectives[OBJ_LIFT_PASS] = true;
+            applyScoreDelta(score, SCORE_LIFT_PASS);
+        }
+
         else if (itemSymbol == ENT_CABINET_TRAIN_KEY){
             objectives[OBJ_TRAIN_KEY] = true;
             applyScoreDelta(score, SCORE_TRAIN_KEY);
@@ -381,6 +386,17 @@ void runSimulation(int& playerFloor, int& playerRoom, int& energy, int& time, in
                                 roomEntities[3][0][j] = roomEntities[3][0][j+1];
                             }
                             entityCounts[3][0]--;
+                            break;
+                        }
+                    }
+                }
+                if (objectives[OBJ_CAT_SECURED]) {
+                    for (int i = 0; i < entityCounts[2][2]; i++) {
+                        if (roomEntities[2][2][i] == ENT_CAT) {
+                            for (int j = i; j < entityCounts[2][2] - 1; j++) {
+                                roomEntities[2][2][j] = roomEntities[2][2][j + 1];
+                            }
+                            entityCounts[2][2]--;
                             break;
                         }
                     }
