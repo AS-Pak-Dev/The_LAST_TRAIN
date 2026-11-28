@@ -276,4 +276,21 @@ bool handleUnlockCabinetCommand(const char* code, int currentFloor, int currentR
    return true;
 }
 
+bool checkEndConditions(int energy, const bool objectives[NUM_OBJECTIVES]){
+    if (objectives[OBJ_MISSION_WON]){
+        printHeader("Victory!!! The last train leaves safely...");
+        return true;
+    }
 
+    if (energy <= 0){
+        printHeader("Mission Failed!!! You ran out of energy...");
+        return true;
+    }
+
+    if (time <= 0){
+        printHeader("Mission Failed!!! You ran out of time...");
+        return true;
+    }
+
+    return false;
+}
