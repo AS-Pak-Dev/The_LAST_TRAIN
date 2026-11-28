@@ -180,14 +180,100 @@ bool handleCollectCommand(char itemSymbol, int currentFloor, int currentRoom, in
 }
 
 
-bool handleUseCommand(char itemSymbol, int currentFloor, int currentRoom, int& energy, int& time, int &score, char inventory[MAX_INVENTORY_CAPACITY], int& inventoryCount, bool objectives[NUM_OBJECTIVES]){
+bool handleUseCommand(char itemSymbol, int currentFloor, int currentRoom, int& energy, int& time, int& score, char inventory[MAX_INVENTORY_CAPACITY], int& inventoryCount, bool objectives[NUM_OBJECTIVES]){
 
     if (hasItem(inventory, inventoryCount,  itemSymbol)){
         cout << "You do not hav that item in your inventory." << endl;
         return false;
     }
 
-    if (itemSymbol == ENT_MEDICAL_KIT && currentFloor == 4)
+    if (itemSymbol == ENT_MEDICAL_KIT && currentFloor == 4 && currentRoom == 1 && !objectives[OBJ_PASSENGER_RESCUED]){
+        applyResourceDelta(energy, time, COST_ITEM_USE_ENERGY, COST_ITEM_USE_TIME);
+        objectives[OBJ_PASSENGER_RESCUED] = true;
+        applyScoreDelta(score, SCORE_RESCUE_PASSENGER);
+        cout << "You treated the passenger. Passenger rescued...!\n";
+        return true;
+    }
 
+    if (itemSymbol == ENT_FUSE && currentFloor == 3 && currentRoom == 4){
+        applyResourceDelta(energy, time, COST_ITEM_USE_ENERGY, COST_ITEM_USE_TIME);
+        removeItem(inventory, inventoryCount, ENT_CAT_CARRIER);
+        objectives[OBJ_CAT_SECURED] = true;
+        cout << "You have the cat in the carrir. Cat secured...!\n";
+        return true;
+    }
+
+    if (itemSymbol == ENT_FUSE && currentFloor == 3 && currentRoom == 4){
+        applyResourceDelta(energy, time, COST_ITEM_USE_ENERGY, COST_ITEM_USE_TIME);
+        installFuseControlPanel(inventory, inventoryCount, objectives, score);
+        cout << "Fuse installed in the control Panel.\n";
+        if (objectives[OBJ_LIFT_PASS]){
+            objectives[OBJ_LIFT2_ACTIVE] = true;
+            cout << "Lift 2 is now working!\n";
+        }
+        else {
+            cout << "Collect the Lift Pass to use lift 2.\n";
+        }
+        return true;
+    }
+
+    if (itemSymbol == ENT_CABINET_TRAIN_KEY){
+        if (currentFloor != 5 || currentRoom != 2){
+            cout << "The train is at the boarding platform(F5 R2).\n";
+            return false;
+        }
+        
+        if (!objectives[OBJ_PASSENGER_RESCUED] || !objectives[OBJ_CAT_SECURED]){
+            cout << "Rescue the passenger and secure the cat first.\n";
+            return false;
+        }
+
+        applyResourceDelta(energy, time , COST_ITEM_USE_ENERGY, COST_ITEM_USE_TIME);
+        objectives[OBJ_TRAIN_PREPARED] = true;
+        objectives[OBJ_MISSION_WON] = true;
+        applyScoreDelta(score, SCORE_PREPARE_TRAIN + SCORE_MISSION_VICTORY);
+        cout << "The train is ready, Everyone on board!!.\n";
+        return true;
+    }
+
+    cout << "Nothing happens, try using it in the correct room.\n";
+    return false;
 
 }
+
+//check if cabinet in the room and look for ^ item, that has not been opened and all 3 clues are found and the code is correct
+bool handleUnlockCabinetCommand(const char* code, int currentFloor, int currentRoom, bool objectives[NUM_OBJECTIVES], int & score, char roomEntities[NUM_FLOOR][ROOMS_PER_FLOOR][MAX_ENTITIES_PER_ROOM], int &entityCount){
+
+    bool cabinetHere = false;
+    for (int i =0; i < entityCount; i++){
+        if (roomEntities[currentFloor - 1][currentRoom -1][i] == ENT_CABINET_TRAIN_KEY){
+            cabinetHere = true;
+        }
+    }
+    if (obejctives[OBJ_CABINET_UNLOCKED]){
+        cout << "The cabinet is already openn.\n";
+        return false;
+   }
+    
+    if (!cabinetHere){
+        cout << "The cabinet is in here in F5 R1.\n";
+        return false;
+   }
+
+   if (!objectives[OBJ_CLUE_4] || !objectives[OBJ_CLUE_2] || !objectives[OBJ_CLUE_&]){
+        cout << "You have not found all 3 clue digits yet.\n";
+        return false;
+   }
+
+   if (!verifyCabinetCode(code, objectives)){
+        cout << "Wrong code.\n";
+        return false;
+   }
+
+   objectives[OBJ_CABINET_UNLOCKED] = true;
+   applyScoreDelta(score, SCORE_CABINET_UNLOCK);
+   cout << "CAbinet Unlocked! Collect the train key( ^ ).\n";
+   return true;
+}
+
+
