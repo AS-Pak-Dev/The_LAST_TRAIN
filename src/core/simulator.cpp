@@ -389,9 +389,38 @@ void runSimulation(int& playerFloor, int& playerRoom, int& energy, int& time, in
             }
 
             case '5': {
-                
+                char code[4] = {'x', 'x', 'x', '\0'};
+                cout << "Enter 3-digit code: ";
+                cin >> code[0] >> code[1] >> code[2];
+                if(cin.fail()) break;
+                bool opened = handleUnlockCabinetCommand(code, playerFloor, playerRoom, objectives, score, roomEntities, entityCounts[f][r]);
+                if(opened) applyResourceDelta(energy, time, COST_ITEM_USE_ENERGY, COST_ITEM_USE_TIME);
+                break;
             } 
+
+            case '6': {
+                renderObjectivesChecklist(objectives);
+                break;
+            } 
+
+            case '7' : 
+                if(saveGameStateToFile(saveFile, playerFloor, playerRoom, energy, time, score, inventory, inventoryCount, objectives, emergencyTripsLeft, roomEntities, entityCounts)){
+                    cout << "Game saved." << endl;
+                }else{
+                    cout << "Could not save the game." << endl;
+                }
+                break;
             
+            default:
+                cout << "Invalid choice."<<endl;
+        }
+
+        if(checkEndConditions(energy, time, objectives)) {
+            bool victory = objectives[OBJ_MISSION_WON];
+            if(!victory) objectives[OBJ_MISSION_FAILED] = true;
+            writeGameSummaryReport(summaryFile, score, energy, time, objectives, victory);
+            cout << "Summary written to " << summaryFile << endl;
+            return;
         }
     }
 }
