@@ -1,0 +1,21 @@
+=====  THE LAST TRAIN - GAME SUMMARY  ===== 
+RESULT: VICTORY
+FINAL SCORE: 420/520
+ENERGY LEFT: 9
+TIME LEFT: 3
+
+OBJECTIVES:
+[X] Master Key collected
+[X] Clue digit 4 found
+[X] Clue digit 2 found
+[X] Clue digit 7 found
+[X] Cabinet unlocked
+[X] Train Key collected
+[X] Fuse collected
+[X] Fuse installed
+[X] Lift Pass collected
+[X] Lift 2 active
+[X] Pasenger rescued
+[X] Cat Carrier collected
+[X] Cat secured
+[X] Train prepared

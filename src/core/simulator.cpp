@@ -205,7 +205,8 @@ bool handleUseCommand(char itemSymbol, int currentFloor, int currentRoom, int& e
         applyResourceDelta(energy, time, COST_ITEM_USE_ENERGY, COST_ITEM_USE_TIME);
         removeItem(inventory, inventoryCount, ENT_CAT_CARRIER);
         objectives[OBJ_CAT_SECURED] = true;
-        cout << "You have the cat in the carrir. Cat secured...!\n";
+        applyScoreDelta(score, SCORE_SECURE_CAT);
+        cout << "You have the cat in the carrier. Cat secured...!\n";
         return true;
     }
 
